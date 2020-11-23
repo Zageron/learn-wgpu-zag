@@ -1274,24 +1274,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tutorial2-swapchain"
-version = "0.2.0"
-dependencies = [
- "futures",
- "wgpu",
- "winit",
-]
-
-[[package]]
-name = "tutorial2-swapchain-challenge"
-version = "0.2.0"
-dependencies = [
- "futures",
- "wgpu",
- "winit",
-]
-
-[[package]]
 name = "typed-arena"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

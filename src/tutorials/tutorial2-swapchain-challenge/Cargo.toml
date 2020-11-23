@@ -1,0 +1,18 @@
+[package]
+name = "tutorial2-swapchain-challenge"
+description = "Add mouse input controlled clear color."
+version = "0.2.0"
+authors = [
+    "Ben Hansen <bhbenjaminhansen@gmail.com>",
+    "Zageron <hello@adambryant.ca>",
+]
+edition = "2018"
+
+[[bin]]
+name = "tutorial2-swapchain-challenge"
+path = "src/main.rs"
+
+[dependencies]
+winit = "0.23"
+wgpu = "0.6"
+futures = "0.3.8"
