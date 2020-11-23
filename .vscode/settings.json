@@ -1,0 +1,5 @@
+{
+    "editor.formatOnSave": true,
+    "rust.rustfmt_path": "~/.cargo/bin/rustfmt",
+    "rust-client.engine": "rust-analyzer"
+}

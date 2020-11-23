@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    # beginner tutorials
+    "src/tutorials/*",
+]
