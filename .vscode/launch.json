@@ -40,6 +40,43 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'tutorial2-swapchain'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=tutorial2-swapchain",
+                    "--package=tutorial2-swapchain"
+                ],
+                "filter": {
+                    "name": "tutorial2-swapchain",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'tutorial2-swapchain'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=tutorial2-swapchain",
+                    "--package=tutorial2-swapchain"
+                ],
+                "filter": {
+                    "name": "tutorial2-swapchain",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
