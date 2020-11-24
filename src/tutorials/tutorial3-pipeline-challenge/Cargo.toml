@@ -1,5 +1,11 @@
 [package]
 name = "tutorial3-pipeline-challenge"
+
+description = """
+Create a second pipeline that uses the triangle's
+position data to create a color that it then sends
+to the fragment shader to use."""
+
 version = "0.2.0"
 authors = [
     "Ben Hansen <bhbenjaminhansen@gmail.com>",

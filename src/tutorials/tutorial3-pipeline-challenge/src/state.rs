@@ -12,11 +12,18 @@ mod state {
         size: winit::dpi::PhysicalSize<u32>,
         clear_color: wgpu::Color,
         render_pipeline: wgpu::RenderPipeline,
+        challenge_render_pipeline: wgpu::RenderPipeline,
+        use_challenge_pipeline: bool,
     }
 
     impl State {
         pub fn size(&self) -> winit::dpi::PhysicalSize<u32> {
             return self.size;
+        }
+
+        pub fn use_challenge_pipeline(&mut self) {
+            self.use_challenge_pipeline = !self.use_challenge_pipeline;
+            println!("{}", self.use_challenge_pipeline);
         }
 
         pub fn update_clear_color(&mut self, x_modifier: f64, y_modifier: f64) {
@@ -119,6 +126,50 @@ mod state {
                 alpha_to_coverage_enabled: false,
             });
 
+            let vs_challenge_module =
+                device.create_shader_module(wgpu::include_spirv!("challenge.vert.spv"));
+            let fs_challenge_module =
+                device.create_shader_module(wgpu::include_spirv!("challenge.frag.spv"));
+
+            let challenge_render_pipeline =
+                device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                    label: Some("Challenge Render Pipeline"),
+                    layout: Some(&render_pipeline_layout),
+                    vertex_stage: wgpu::ProgrammableStageDescriptor {
+                        module: &vs_challenge_module,
+                        entry_point: "main",
+                    },
+                    fragment_stage: Some(wgpu::ProgrammableStageDescriptor {
+                        module: &fs_challenge_module,
+                        entry_point: "main",
+                    }),
+                    rasterization_state: Some(wgpu::RasterizationStateDescriptor {
+                        front_face: wgpu::FrontFace::Ccw,
+                        cull_mode: wgpu::CullMode::Back,
+                        depth_bias: 0,
+                        depth_bias_slope_scale: 0.0,
+                        depth_bias_clamp: 0.0,
+                        clamp_depth: false,
+                    }),
+                    color_states: &[wgpu::ColorStateDescriptor {
+                        format: swap_chain_descriptor.format,
+                        color_blend: wgpu::BlendDescriptor::REPLACE,
+                        alpha_blend: wgpu::BlendDescriptor::REPLACE,
+                        write_mask: wgpu::ColorWrite::ALL,
+                    }],
+                    primitive_topology: wgpu::PrimitiveTopology::TriangleList,
+                    depth_stencil_state: None,
+                    vertex_state: wgpu::VertexStateDescriptor {
+                        index_format: wgpu::IndexFormat::Uint16,
+                        vertex_buffers: &[],
+                    },
+                    sample_count: 1,
+                    sample_mask: !0,
+                    alpha_to_coverage_enabled: false,
+                });
+
+            let use_challenge_pipeline: bool = true;
+
             return Self {
                 surface,
                 device,
@@ -128,6 +179,8 @@ mod state {
                 size,
                 clear_color,
                 render_pipeline,
+                challenge_render_pipeline,
+                use_challenge_pipeline,
             };
         }
 
@@ -172,7 +225,11 @@ mod state {
                     depth_stencil_attachment: None,
                 });
 
-                render_pass.set_pipeline(&self.render_pipeline);
+                match self.use_challenge_pipeline {
+                    true => render_pass.set_pipeline(&self.render_pipeline),
+                    false => render_pass.set_pipeline(&self.challenge_render_pipeline),
+                }
+
                 render_pass.draw(0..3, 0..1);
             }
             // {} drop(_render_pass);

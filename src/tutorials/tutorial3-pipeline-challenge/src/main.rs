@@ -33,6 +33,11 @@ fn run(
                     state: ElementState::Pressed,
                     ..
                 } => *control_flow = ControlFlow::Exit,
+                KeyboardInput {
+                    virtual_keycode: Some(VirtualKeyCode::Space),
+                    state: ElementState::Pressed,
+                    ..
+                } => state.use_challenge_pipeline(),
                 _ => {}
             },
             WindowEvent::CursorMoved { position, .. } => {
