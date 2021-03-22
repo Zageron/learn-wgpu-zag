@@ -9,7 +9,7 @@ use state::State;
 use std::convert::TryFrom;
 
 fn normalize(number: f64, max: u32) -> f64 {
-    return number / f64::try_from(max).unwrap();
+    number / f64::try_from(max).unwrap()
 }
 
 fn run(
@@ -27,14 +27,16 @@ fn run(
             WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                 state.resize(**new_inner_size)
             }
-            WindowEvent::KeyboardInput { input, .. } => match input {
-                KeyboardInput {
+            WindowEvent::KeyboardInput { input, .. } => {
+                if let KeyboardInput {
                     virtual_keycode: Some(VirtualKeyCode::Escape),
                     state: ElementState::Pressed,
                     ..
-                } => *control_flow = ControlFlow::Exit,
-                _ => {}
-            },
+                } = input
+                {
+                    *control_flow = ControlFlow::Exit
+                }
+            }
             WindowEvent::CursorMoved { position, .. } => state.update_clear_color(
                 normalize(position.x, state.size().width),
                 normalize(position.y, state.size().height),

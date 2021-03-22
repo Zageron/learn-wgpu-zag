@@ -6,12 +6,8 @@ use winit::{
 
 mod state;
 use state::State;
-use std::convert::TryFrom;
 
-fn normalize(number: f64, max: u32) -> f64 {
-    return number / f64::try_from(max).unwrap();
-}
-
+#[allow(dead_code, deprecated, unused_variables)]
 fn run(
     event_loop: EventLoop<()>,
     window: Window,
@@ -27,23 +23,67 @@ fn run(
             WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                 state.resize(**new_inner_size)
             }
-            WindowEvent::KeyboardInput { input, .. } => match input {
-                KeyboardInput {
+            WindowEvent::KeyboardInput { input, .. } => {
+                if let KeyboardInput {
                     virtual_keycode: Some(VirtualKeyCode::Escape),
                     state: ElementState::Pressed,
                     ..
-                } => *control_flow = ControlFlow::Exit,
-                _ => {}
-            },
-            WindowEvent::CursorMoved { position, .. } => state.update_clear_color(
-                normalize(position.x, state.size().width),
-                normalize(position.y, state.size().height),
-            ),
-            _ => {}
+                } = input
+                {
+                    *control_flow = ControlFlow::Exit
+                }
+            }
+            WindowEvent::CursorMoved {
+                device_id,
+                position,
+                modifiers,
+            } => {}
+            WindowEvent::Moved(_) => {}
+            WindowEvent::Destroyed => {}
+            WindowEvent::DroppedFile(_) => {}
+            WindowEvent::HoveredFile(_) => {}
+            WindowEvent::HoveredFileCancelled => {}
+            WindowEvent::ReceivedCharacter(_) => {}
+            WindowEvent::Focused(_) => {}
+            WindowEvent::ModifiersChanged(_) => {}
+            WindowEvent::CursorEntered { device_id } => {}
+            WindowEvent::CursorLeft { device_id } => {}
+            WindowEvent::MouseWheel {
+                device_id,
+                delta,
+                phase,
+                modifiers,
+            } => {}
+            WindowEvent::MouseInput {
+                device_id,
+                state,
+                button,
+                modifiers,
+            } => {}
+            WindowEvent::TouchpadPressure {
+                device_id,
+                pressure,
+                stage,
+            } => {}
+            WindowEvent::AxisMotion {
+                device_id,
+                axis,
+                value,
+            } => {}
+            WindowEvent::Touch(_) => {}
+            WindowEvent::ThemeChanged(_) => {}
         },
         Event::RedrawRequested(_) => {
             state.update();
-            state.render();
+            match state.render() {
+                Ok(_) => {}
+                // Recreate the swap_chain if lost
+                Err(wgpu::SwapChainError::Lost) => state.resize(state.size()),
+                // The system is out of memory, we should probably quit
+                Err(wgpu::SwapChainError::OutOfMemory) => *control_flow = ControlFlow::Exit,
+                // All other errors (Outdated, Timeout) should be resolved by the next frame
+                Err(e) => eprintln!("{:?}", e),
+            }
         }
         Event::RedrawEventsCleared => {
             window.request_redraw();

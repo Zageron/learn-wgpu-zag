@@ -12,7 +12,9 @@ name = "tutorial5-textures"
 path = "src/main.rs"
 
 [dependencies]
-winit = "0.23"
-wgpu = "0.6"
-futures = "0.3.8"
-bytemuck = "1.4.1"
+anyhow = "1"
+winit = "0.24"
+wgpu = "0.7"
+futures = "0.3"
+bytemuck = { version = "1", features = ["derive"] }
+image = "0.23"

@@ -9,7 +9,7 @@ use state::State;
 use std::convert::TryFrom;
 
 fn normalize(number: f64, max: u32) -> f64 {
-    return number / f64::try_from(max).unwrap();
+    number / f64::try_from(max).unwrap()
 }
 
 fn run(
