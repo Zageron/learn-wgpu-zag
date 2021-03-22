@@ -9,7 +9,7 @@ use state::State;
 use std::convert::TryFrom;
 
 fn normalize(number: f64, max: u32) -> f64 {
-    return number / f64::try_from(max).unwrap();
+    number / f64::try_from(max).unwrap()
 }
 
 fn run(
@@ -29,13 +29,13 @@ fn run(
             }
             WindowEvent::KeyboardInput { input, .. } => match input {
                 KeyboardInput {
-                    virtual_keycode: Some(VirtualKeyCode::Escape),
                     state: ElementState::Pressed,
+                    virtual_keycode: Some(VirtualKeyCode::Escape),
                     ..
                 } => *control_flow = ControlFlow::Exit,
                 KeyboardInput {
-                    virtual_keycode: Some(VirtualKeyCode::Space),
                     state: ElementState::Pressed,
+                    virtual_keycode: Some(VirtualKeyCode::Space),
                     ..
                 } => state.use_challenge_pipeline(),
                 _ => {}

@@ -1,3 +1,6 @@
+#![allow(clippy::collapsible_match)]
+#![allow(clippy::single_match)]
+
 use winit::{
     event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -27,16 +30,14 @@ fn run(
             WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                 state.resize(**new_inner_size)
             }
-            WindowEvent::KeyboardInput { input, .. } => {
-                if let KeyboardInput {
-                    virtual_keycode: Some(VirtualKeyCode::Escape),
+            WindowEvent::KeyboardInput { input, .. } => match input {
+                KeyboardInput {
                     state: ElementState::Pressed,
+                    virtual_keycode: Some(VirtualKeyCode::Escape),
                     ..
-                } = input
-                {
-                    *control_flow = ControlFlow::Exit
-                }
-            }
+                } => *control_flow = ControlFlow::Exit,
+                _ => {}
+            },
             WindowEvent::CursorMoved { position, .. } => state.update_clear_color(
                 normalize(position.x, state.size().width),
                 normalize(position.y, state.size().height),

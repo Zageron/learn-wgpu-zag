@@ -1,3 +1,6 @@
+#![allow(clippy::collapsible_match)]
+#![allow(clippy::single_match)]
+
 use winit::{
     event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -5,21 +8,24 @@ use winit::{
 };
 
 fn run(event_loop: EventLoop<()>, _window: Window, _swapchain_format: wgpu::TextureFormat) {
-    event_loop.run(move |event, _, control_flow| match event {
-        Event::WindowEvent { ref event, .. } => match event {
-            WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-            WindowEvent::Resized(size) => println!("resized {} x {}", size.height, size.width),
-            WindowEvent::KeyboardInput { input, .. } => match input {
-                KeyboardInput {
-                    virtual_keycode: Some(VirtualKeyCode::Escape),
-                    state: ElementState::Pressed,
-                    ..
-                } => *control_flow = ControlFlow::Exit,
+    event_loop.run(move |event, _, control_flow| {
+        if let Event::WindowEvent { ref event, .. } = event {
+            match event {
+                WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
+                WindowEvent::Resized(size) => println!("resized {} x {}", size.height, size.width),
+                WindowEvent::KeyboardInput { input, .. } => {
+                    if let KeyboardInput {
+                        state: ElementState::Pressed,
+                        virtual_keycode: Some(VirtualKeyCode::Escape),
+                        ..
+                    } = input
+                    {
+                        *control_flow = ControlFlow::Exit
+                    }
+                }
                 _ => {}
-            },
-            _ => {}
-        },
-        _ => {}
+            }
+        }
     });
 }
 
